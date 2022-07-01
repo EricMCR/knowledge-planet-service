@@ -39,36 +39,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public BaseResult userRegister(String username, String password, String checkPassword) {
-        // 校验
+        // Validation
         if (StringUtils.isAnyBlank(username, password, checkPassword)) {
-            return BaseResult.getFailedResult(400, "账号或密码不能为空");
+            return BaseResult.getFailedResult(400, "Username or password cannot be empty");
         }
         if (username.length() < 4) {
-            return BaseResult.getFailedResult(400, "账号长度不能小于4位");
+            return BaseResult.getFailedResult(400, "The length of the username must not be less than 4 digits");
         }
         if (password.length() < 8 || checkPassword.length() < 8) {
-            return BaseResult.getFailedResult(400, "密码长度不能小于8位");
+            return BaseResult.getFailedResult(400, "The length of the password cannot be less than 8 digits");
         }
-        // 账户不能包含特殊字符
+        // Username cannot contain special characters
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(username);
         if (matcher.find()) {
-            return BaseResult.getFailedResult(400, "账号不能包含特殊字符");
+            return BaseResult.getFailedResult(400, "Username cannot contain special characters");
         }
-        // 密码和校验密码相同
+        // Same password and verification password
         if (!password.equals(checkPassword)) {
-            return BaseResult.getFailedResult(400, "两次输入密码不一致");
+            return BaseResult.getFailedResult(400, "The password entered twice does not match");
         }
-        // 账户不能重复
+        // No duplication of usernames
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         long count = this.count(queryWrapper);
         if (count > 0) {
-            return BaseResult.getFailedResult(400, "当前账号已被注册");
+            return BaseResult.getFailedResult(400, "This username has been registered");
         }
-        // 加密密码
+        // Encrypted passwords
         String encryptedPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        // 插入数据
+        // Insert data
         User user = new User();
         user.setUsername(username);
         user.setPassword(encryptedPassword);
@@ -78,45 +78,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public BaseResult userLogin(String username, String password, HttpServletRequest request) {
-        // 校验
+        // Validation
         if (StringUtils.isAnyBlank(username, password)) {
-            return BaseResult.getFailedResult(400, "账号或密码不能为空");
+            return BaseResult.getFailedResult(400, "Username or password cannot be empty");
         }
         if (username.length() < 4) {
-            return BaseResult.getFailedResult(400, "账号长度不能小于4位");
+            return BaseResult.getFailedResult(400, "The length of the username must not be less than 4 digits");
         }
         if (password.length() < 8) {
-            return BaseResult.getFailedResult(400, "密码长度不能小于8位");
+            return BaseResult.getFailedResult(400, "The length of the password cannot be less than 8 digits");
         }
-        // 账户不能包含特殊字符
+        // Username cannot contain special characters
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(username);
         if (matcher.find()) {
-            return BaseResult.getFailedResult(400, "账号不能包含特殊字符");
+            return BaseResult.getFailedResult(400, "Username cannot contain special characters");
         }
-        // 加密密码
+        // Encrypted passwords
         String encryptedPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        // 查询用户是否存在
+        // Check if the username already exists
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         queryWrapper.eq("password", encryptedPassword);
         User user = userMapper.selectOne(queryWrapper);
-        // 用户名或密码错误
+        // Incorrect username or password
         if (user == null) {
-            return BaseResult.getFailedResult(400, "账号或密码错误");
+            return BaseResult.getFailedResult(400, "Incorrect username or password");
         }
 
-        // 生成脱敏用户对象
+        // Generate desensitised user objects
         SafeUser safeUser = new SafeUser(user);
 
-        // 生成token
+        // Generate token
         Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(user.getId()));
         map.put("username", user.getUsername());
         map.put("userRole", String.valueOf(user.getUserRole()));
         String token = JWTUtils.getToken(map);
 
-        // 生成登录信息对象
+        // Generate login information object
         LoginVo loginVo = new LoginVo(safeUser, token);
         return BaseResult.getSuccessResult(loginVo);
     }

@@ -17,9 +17,9 @@ public class JWTUtils {
     private static final String SIGN = "user-center";
 
     /**
-     * 生成token
+     * Generate token
      *
-     * @param map 用户信息
+     * @param map User information
      * @return token
      */
     public static String getToken(Map<String,String> map){
@@ -33,10 +33,10 @@ public class JWTUtils {
     }
 
     /**
-     * toke认证
+     * toke certification
      *
-     * @param token token令牌
-     * @return 用户信息
+     * @param token
+     * @return User information
      */
     public static DecodedJWT verify(String token){
         JWTVerifier build = JWT.require(Algorithm.HMAC256(SIGN)).build();
@@ -44,10 +44,10 @@ public class JWTUtils {
     }
 
     /**
-     * 获取用户id
+     * Get user id
      *
      * @param request
-     * @return 用户id
+     * @return user id
      */
     public static Long getUserId(HttpServletRequest request){
         String token = request.getHeader("token");
@@ -58,10 +58,10 @@ public class JWTUtils {
     }
 
     /**
-     * 获取用户身份
+     * Get the user's identity
      *
      * @param request
-     * @return 用户身份码
+     * @return User identification code
      */
     public static int getUserRole(HttpServletRequest request){
         String token = request.getHeader("token");

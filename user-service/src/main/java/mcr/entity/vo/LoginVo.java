@@ -7,12 +7,12 @@ import mcr.entity.domain.SafeUser;
 public class LoginVo {
 
     /**
-     * 脱敏后的用户对象
+     * Desensitised user object
      */
     private SafeUser userInfo;
 
     /**
-     * 用户Token
+     * User's Token
      */
     private String token;
 
