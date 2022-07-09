@@ -1,4 +1,4 @@
-package mcr.result;
+package mcr.entity.result;
 
 import lombok.Data;
 

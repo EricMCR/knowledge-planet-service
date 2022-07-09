@@ -3,9 +3,10 @@ package mcr.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcr.entity.domain.SafeUser;
+
 import mcr.entity.domain.User;
 import mcr.entity.vo.LoginVo;
-import mcr.result.BaseResult;
+import mcr.entity.result.BaseResult;
 import mcr.service.UserService;
 import mcr.mapper.UserMapper;
 import mcr.utils.JWTUtils;
@@ -119,6 +120,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // Generate login information object
         LoginVo loginVo = new LoginVo(safeUser, token);
         return BaseResult.getSuccessResult(loginVo);
+    }
+
+    @Override
+    public BaseResult getUserByToken(String token) {
+        Long userId = JWTUtils.getUserIdByToken(token);
+        if (userId == null) {
+            return BaseResult.getFailedResult(403, "Illegal token");
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", userId);
+        User user = this.getOne(queryWrapper);
+        if (user == null) {
+            return BaseResult.getFailedResult(403, "Illegal token");
+        }
+        return BaseResult.getSuccessResult(user);
     }
 }
 

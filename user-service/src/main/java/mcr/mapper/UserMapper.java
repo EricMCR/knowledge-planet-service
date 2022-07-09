@@ -1,7 +1,7 @@
 package mcr.mapper;
 
-import mcr.entity.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import mcr.entity.domain.User;
 
 /**
 * @author mcr98

@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
+import mcr.entity.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
@@ -40,7 +41,12 @@ public class JWTUtils {
      */
     public static DecodedJWT verify(String token){
         JWTVerifier build = JWT.require(Algorithm.HMAC256(SIGN)).build();
-        return build.verify(token);
+        try{
+            return build.verify(token);
+        }catch (Exception e) {
+            return null;
+        }
+
     }
 
     /**
@@ -49,9 +55,11 @@ public class JWTUtils {
      * @param request
      * @return user id
      */
-    public static Long getUserId(HttpServletRequest request){
-        String token = request.getHeader("token");
+    public static Long getUserIdByToken(String token){
         DecodedJWT verify = JWTUtils.verify(token);
+        if (verify == null) {
+            return null;
+        }
         Claim idClaim = verify.getClaim("id");
         JsonNode id = idClaim.as(JsonNode.class);
         return id.asLong();

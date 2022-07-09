@@ -1,8 +1,8 @@
 server:
-  port: 8081
+  port: 8082
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/knowledge_planet_user?useSSL=false
+    url: jdbc:mysql://localhost:3306/knowledge_planet_node?useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -10,4 +10,4 @@ spring:
     nacos:
       server-addr: localhost:8848
   application:
-    name: user-service
+    name: graph-service

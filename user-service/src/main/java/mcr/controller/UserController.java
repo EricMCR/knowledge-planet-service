@@ -2,7 +2,7 @@ package mcr.controller;
 
 import mcr.entity.request.UserLoginRequest;
 import mcr.entity.request.UserRegisterRequest;
-import mcr.result.BaseResult;
+import mcr.entity.result.BaseResult;
 import mcr.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +45,10 @@ public class UserController {
             return BaseResult.getFailedResult(400, "Username or password cannot be empty");
         }
         return userService.userLogin(userAccount, userPassword, request);
+    }
+
+    @PostMapping("/getUserByToken")
+    public BaseResult getUserByToken(@RequestBody String token) {
+        return userService.getUserByToken(token);
     }
 }

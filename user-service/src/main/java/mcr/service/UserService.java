@@ -1,8 +1,8 @@
 package mcr.service;
 
-import mcr.entity.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import mcr.result.BaseResult;
+import mcr.entity.domain.User;
+import mcr.entity.result.BaseResult;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,4 +31,6 @@ public interface UserService extends IService<User> {
      * @return Return desensitised user information
      */
     BaseResult userLogin(String username, String password, HttpServletRequest request);
+
+    BaseResult getUserByToken(String token);
 }
