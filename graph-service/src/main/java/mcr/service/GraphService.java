@@ -16,4 +16,8 @@ public interface GraphService extends IService<Graph> {
 
     BaseResult createGraph(CreateGraphRequest createGraphRequest, String token);
 
+    BaseResult getGraphById(Long id);
+
+    BaseResult popularGraphList();
+
 }

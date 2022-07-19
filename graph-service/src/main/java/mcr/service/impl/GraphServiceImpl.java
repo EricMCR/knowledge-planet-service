@@ -1,11 +1,13 @@
 package mcr.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcr.clients.UserClient;
 import mcr.entity.domain.Graph;
 import mcr.entity.domain.User;
 import mcr.entity.request.CreateGraphRequest;
 import mcr.entity.result.BaseResult;
+import mcr.entity.vo.GraphVo;
 import mcr.service.GraphService;
 import mcr.mapper.GraphMapper;
 import org.apache.logging.log4j.util.Strings;
@@ -13,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,6 +58,40 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
             return BaseResult.getSuccessResult(graph);
         }
         return BaseResult.getFailedResult();
+    }
+
+    @Override
+    public BaseResult getGraphById(Long id) {
+        QueryWrapper<Graph> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", id);
+        Graph graphObj = this.getOne(queryWrapper1);
+        if (graphObj == null) {
+            return BaseResult.getFailedResult(404, "Graph not found");
+        }
+        graphObj.setViews(graphObj.getViews()+1);
+        this.saveOrUpdate(graphObj);
+        BaseResult result = userClient.getUserById(graphObj.getUserId());
+        Map<String, Object> map = (HashMap)result.getData();
+
+        GraphVo graphVo = new GraphVo(graphObj, (String)map.get("username"));
+        return BaseResult.getSuccessResult(graphVo);
+    }
+
+    @Override
+    public BaseResult popularGraphList() {
+        QueryWrapper<Graph> graphQueryWrapper = new QueryWrapper<Graph>();
+        graphQueryWrapper.orderByAsc("views");
+        List<Graph> graphList = this.list(graphQueryWrapper);
+        List<User> userList = userClient.list();
+        Map<Long, String> usernameMap = new HashMap<>();
+        for (User user: userList) {
+            usernameMap.put(user.getId(), user.getUsername());
+        }
+        List<GraphVo> list = new ArrayList<>();
+        for (Graph graph: graphList) {
+            list.add(new GraphVo(graph, usernameMap.get(graph.getUserId())));
+        }
+        return BaseResult.getSuccessResult(list);
     }
 }
 

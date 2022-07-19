@@ -20,4 +20,14 @@ public class GraphController {
     BaseResult createGraph(@RequestBody CreateGraphRequest createGraphRequest, @RequestHeader("token") String token) {
         return graphService.createGraph(createGraphRequest, token);
     }
+
+    @PostMapping("/getGraphById")
+    BaseResult getGraphById(@RequestBody Graph graph) {
+        return graphService.getGraphById(graph.getId());
+    }
+
+    @PostMapping("/popularGraphList")
+    BaseResult popularGraphList() {
+        return graphService.popularGraphList();
+    }
 }

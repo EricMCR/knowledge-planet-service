@@ -33,4 +33,6 @@ public interface UserService extends IService<User> {
     BaseResult userLogin(String username, String password, HttpServletRequest request);
 
     BaseResult getUserByToken(String token);
+
+    BaseResult getUserById(Long id);
 }

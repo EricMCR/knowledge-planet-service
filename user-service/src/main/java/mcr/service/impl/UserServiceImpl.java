@@ -136,6 +136,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         return BaseResult.getSuccessResult(user);
     }
+
+    @Override
+    public BaseResult getUserById(Long id) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        User user = this.getOne(queryWrapper);
+        if (user == null) {
+            return BaseResult.getFailedResult(403, "Illegal id");
+        }
+        return BaseResult.getSuccessResult(user);
+    }
 }
 
 

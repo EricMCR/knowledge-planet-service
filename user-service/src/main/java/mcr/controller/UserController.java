@@ -1,5 +1,6 @@
 package mcr.controller;
 
+import mcr.entity.domain.User;
 import mcr.entity.request.UserLoginRequest;
 import mcr.entity.request.UserRegisterRequest;
 import mcr.entity.result.BaseResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -50,5 +52,15 @@ public class UserController {
     @PostMapping("/getUserByToken")
     public BaseResult getUserByToken(@RequestBody String token) {
         return userService.getUserByToken(token);
+    }
+
+    @PostMapping("/getUserById")
+    public BaseResult getUserById(@RequestBody Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PostMapping("/list")
+    public List<User> list() {
+        return userService.list();
     }
 }
