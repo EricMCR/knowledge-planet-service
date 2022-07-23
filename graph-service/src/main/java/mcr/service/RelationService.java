@@ -3,6 +3,7 @@ package mcr.service;
 import mcr.entity.domain.Graph;
 import mcr.entity.domain.Relation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import mcr.entity.result.BaseResult;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ import java.util.List;
 public interface RelationService extends IService<Relation> {
 
     List<Relation> getGraphRelationList(Graph graph);
+
+    BaseResult updateRelation(Relation relation);
 
 }

@@ -16,4 +16,4 @@ spring:
         - id: graph-service
           uri: lb://graph-service
           predicates:
-            - Path=/graph/**, /node/**
+            - Path=/graph/**, /node/**, /relation/**

@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcr.entity.domain.Graph;
 import mcr.entity.domain.Node;
 import mcr.entity.domain.Relation;
+import mcr.entity.result.BaseResult;
 import mcr.service.RelationService;
 import mcr.mapper.RelationMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,19 @@ public class RelationServiceImpl extends ServiceImpl<RelationMapper, Relation>
         queryWrapper.eq("graph_id", graphId);
         List<Relation> relationList = this.list(queryWrapper);
         return relationList;
+    }
+
+    @Override
+    public BaseResult updateRelation(Relation relation) {
+        if (StringUtils.isBlank(relation.getRelationship())) {
+            return BaseResult.getFailedResult(403, "Relationship can not be empty");
+        }
+        if (this.saveOrUpdate(relation)) {
+            QueryWrapper<Relation> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", relation.getId());
+            return BaseResult.getSuccessResult(this.getOne(queryWrapper));
+        }
+        return BaseResult.getFailedResult();
     }
 }
 
