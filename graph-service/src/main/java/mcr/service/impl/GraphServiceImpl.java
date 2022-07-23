@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author mcr98
@@ -61,6 +58,28 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
     }
 
     @Override
+    public BaseResult updateGraph(Graph graphForm, String token) {
+        QueryWrapper<Graph> graphQueryWrapper = new QueryWrapper<>();
+        graphQueryWrapper.eq("id", graphForm.getId());
+        Graph graph = this.getOne(graphQueryWrapper);
+
+        BaseResult result = userClient.getUserByToken(token);
+        Map<String, Object> map = (HashMap)result.getData();
+        Long currUserId = (Long)map.get("id");
+
+        if (!Objects.equals(currUserId, graph.getUserId())) {
+            return BaseResult.getFailedResult(400, "No modification permission.");
+        }
+
+        graph.setName(graphForm.getName());
+        graph.setDescription(graphForm.getDescription());
+        if (this.saveOrUpdate(graph)) {
+            return BaseResult.getSuccessResult();
+        }
+        return BaseResult.getFailedResult();
+    }
+
+    @Override
     public BaseResult getGraphById(Long id) {
         QueryWrapper<Graph> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("id", id);
@@ -80,7 +99,7 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
     @Override
     public BaseResult popularGraphList() {
         QueryWrapper<Graph> graphQueryWrapper = new QueryWrapper<Graph>();
-        graphQueryWrapper.orderByAsc("views");
+        graphQueryWrapper.orderByDesc("views");
         List<Graph> graphList = this.list(graphQueryWrapper);
         List<User> userList = userClient.list();
         Map<Long, String> usernameMap = new HashMap<>();
