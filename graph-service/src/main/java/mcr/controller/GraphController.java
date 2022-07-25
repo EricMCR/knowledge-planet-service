@@ -6,6 +6,7 @@ import mcr.entity.domain.Relation;
 import mcr.entity.request.CreateGraphRequest;
 import mcr.entity.result.BaseResult;
 import mcr.entity.vo.GraphData;
+import mcr.entity.vo.GraphVo;
 import mcr.service.GraphService;
 import mcr.service.NodeService;
 import mcr.service.RelationService;
@@ -56,5 +57,10 @@ public class GraphController {
     @PostMapping("/popularGraphList")
     BaseResult popularGraphList() {
         return graphService.popularGraphList();
+    }
+
+    @PostMapping("/getGraphListByUserId")
+    List<Graph> getGraphListByUserId(@RequestBody Long id) {
+        return graphService.getGraphListByUserId(id);
     }
 }

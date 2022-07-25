@@ -4,8 +4,10 @@ import mcr.entity.domain.Graph;
 import com.baomidou.mybatisplus.extension.service.IService;
 import mcr.entity.request.CreateGraphRequest;
 import mcr.entity.result.BaseResult;
+import mcr.entity.vo.GraphVo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author mcr98
@@ -21,5 +23,7 @@ public interface GraphService extends IService<Graph> {
     BaseResult getGraphById(Long id);
 
     BaseResult popularGraphList();
+
+    List<Graph> getGraphListByUserId(Long id);
 
 }

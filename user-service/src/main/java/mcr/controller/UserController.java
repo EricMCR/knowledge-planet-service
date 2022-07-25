@@ -5,12 +5,10 @@ import mcr.entity.request.UserLoginRequest;
 import mcr.entity.request.UserRegisterRequest;
 import mcr.entity.result.BaseResult;
 import mcr.service.UserService;
+import mcr.utils.JWTUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -62,5 +60,10 @@ public class UserController {
     @PostMapping("/list")
     public List<User> list() {
         return userService.list();
+    }
+
+    @PostMapping("/userGraphList")
+    public BaseResult getUserGraphList(@RequestHeader("token") String token) {
+        return userService.getUserGraphList(token);
     }
 }

@@ -2,6 +2,9 @@ package mcr.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import mcr.clients.GraphClient;
+import mcr.entity.Vo.GraphVo;
+import mcr.entity.domain.Graph;
 import mcr.entity.domain.SafeUser;
 
 import mcr.entity.domain.User;
@@ -17,6 +20,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +36,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private GraphClient graphClient;
 
     /**
      * Salt values for obfuscated passwords
@@ -146,6 +153,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return BaseResult.getFailedResult(403, "Illegal id");
         }
         return BaseResult.getSuccessResult(user);
+    }
+
+    @Override
+    public BaseResult getUserGraphList(String token) {
+        Long id = JWTUtils.getUserIdByToken(token);
+        List<Graph> graphVoList = graphClient.getGraphListByUserId(id);
+        return BaseResult.getSuccessResult(graphVoList);
     }
 }
 

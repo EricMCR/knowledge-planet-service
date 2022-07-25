@@ -112,6 +112,15 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
         }
         return BaseResult.getSuccessResult(list);
     }
+
+    @Override
+    public List<Graph> getGraphListByUserId(Long id) {
+        QueryWrapper<Graph> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", id);
+        List<Graph> graphList = this.list(queryWrapper);
+
+        return graphList;
+    }
 }
 
 
