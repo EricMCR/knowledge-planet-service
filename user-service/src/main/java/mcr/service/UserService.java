@@ -2,8 +2,8 @@ package mcr.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import mcr.entity.domain.User;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.result.BaseResult;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,5 +37,5 @@ public interface UserService extends IService<User> {
 
     BaseResult getUserById(Long id);
 
-    BaseResult getUserGraphList( String token);
+    BaseResult getUserGraphList(UserGraphRequest userGraphRequest);
 }

@@ -3,11 +3,11 @@ package mcr.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcr.clients.GraphClient;
-import mcr.entity.Vo.GraphVo;
 import mcr.entity.domain.Graph;
 import mcr.entity.domain.SafeUser;
 
 import mcr.entity.domain.User;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.vo.LoginVo;
 import mcr.entity.result.BaseResult;
 import mcr.service.UserService;
@@ -156,9 +156,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public BaseResult getUserGraphList(String token) {
-        Long id = JWTUtils.getUserIdByToken(token);
-        List<Graph> graphVoList = graphClient.getGraphListByUserId(id);
+    public BaseResult getUserGraphList(UserGraphRequest userGraphRequest) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", userGraphRequest.getUsername());
+        User user = this.getOne(queryWrapper);
+        Long id = user.getId();
+        userGraphRequest.setId(id);
+        List<Graph> graphVoList = graphClient.getGraphListByUserId(userGraphRequest);
         return BaseResult.getSuccessResult(graphVoList);
     }
 }

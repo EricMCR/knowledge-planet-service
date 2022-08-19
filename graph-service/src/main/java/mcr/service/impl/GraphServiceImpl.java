@@ -6,10 +6,12 @@ import mcr.clients.UserClient;
 import mcr.entity.domain.Graph;
 import mcr.entity.domain.User;
 import mcr.entity.request.CreateGraphRequest;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.result.BaseResult;
 import mcr.entity.vo.GraphVo;
 import mcr.service.GraphService;
 import mcr.mapper.GraphMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -114,9 +116,15 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
     }
 
     @Override
-    public List<Graph> getGraphListByUserId(Long id) {
+    public List<Graph> getGraphListByUserId(UserGraphRequest userGraphRequest) {
         QueryWrapper<Graph> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", id);
+        queryWrapper.eq("user_id", userGraphRequest.getId());
+        if (StringUtils.isNotBlank(userGraphRequest.getSearchText())) {
+            queryWrapper.like("name", userGraphRequest.getSearchText());
+            queryWrapper.or();
+            queryWrapper.like("description", userGraphRequest.getSearchText());
+        }
+
         List<Graph> graphList = this.list(queryWrapper);
 
         return graphList;

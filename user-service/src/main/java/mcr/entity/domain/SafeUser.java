@@ -15,7 +15,7 @@ public class SafeUser {
     /**
      * id
      */
-    private Long id;
+    private String id;
 
     /**
      * username
@@ -33,7 +33,7 @@ public class SafeUser {
     private Integer userRole;
 
     public SafeUser(User user) {
-        this.setId(user.getId());
+        this.setId(String.valueOf(user.getId()));
         this.setUsername(user.getUsername());
         this.setCreateTime(user.getCreateTime());
         this.setUserRole(user.getUserRole());

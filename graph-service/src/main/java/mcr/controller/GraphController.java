@@ -4,6 +4,7 @@ import mcr.entity.domain.Graph;
 import mcr.entity.domain.Node;
 import mcr.entity.domain.Relation;
 import mcr.entity.request.CreateGraphRequest;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.result.BaseResult;
 import mcr.entity.vo.GraphData;
 import mcr.entity.vo.GraphVo;
@@ -60,7 +61,7 @@ public class GraphController {
     }
 
     @PostMapping("/getGraphListByUserId")
-    List<Graph> getGraphListByUserId(@RequestBody Long id) {
-        return graphService.getGraphListByUserId(id);
+    List<Graph> getGraphListByUserId(@RequestBody UserGraphRequest userGraphRequest) {
+        return graphService.getGraphListByUserId(userGraphRequest);
     }
 }

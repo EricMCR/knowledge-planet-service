@@ -3,6 +3,7 @@ package mcr.service;
 import mcr.entity.domain.Graph;
 import com.baomidou.mybatisplus.extension.service.IService;
 import mcr.entity.request.CreateGraphRequest;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.result.BaseResult;
 import mcr.entity.vo.GraphVo;
 
@@ -24,6 +25,6 @@ public interface GraphService extends IService<Graph> {
 
     BaseResult popularGraphList();
 
-    List<Graph> getGraphListByUserId(Long id);
+    List<Graph> getGraphListByUserId(UserGraphRequest userGraphRequest);
 
 }

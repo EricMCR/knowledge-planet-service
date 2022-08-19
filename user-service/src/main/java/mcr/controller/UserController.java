@@ -1,11 +1,11 @@
 package mcr.controller;
 
 import mcr.entity.domain.User;
+import mcr.entity.request.UserGraphRequest;
 import mcr.entity.request.UserLoginRequest;
 import mcr.entity.request.UserRegisterRequest;
 import mcr.entity.result.BaseResult;
 import mcr.service.UserService;
-import mcr.utils.JWTUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/userGraphList")
-    public BaseResult getUserGraphList(@RequestHeader("token") String token) {
-        return userService.getUserGraphList(token);
+    public BaseResult getUserGraphList(@RequestBody UserGraphRequest userGraphRequest) {
+        return userService.getUserGraphList(userGraphRequest);
     }
 }
