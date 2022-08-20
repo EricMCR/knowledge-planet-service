@@ -25,6 +25,8 @@ public interface GraphService extends IService<Graph> {
 
     BaseResult popularGraphList();
 
+    BaseResult searchGraphList(String keywords);
+
     List<Graph> getGraphListByUserId(UserGraphRequest userGraphRequest);
 
 }

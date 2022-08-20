@@ -116,6 +116,26 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
     }
 
     @Override
+    public BaseResult searchGraphList(String keywords) {
+        QueryWrapper<Graph> graphQueryWrapper = new QueryWrapper<Graph>();
+        graphQueryWrapper.like("name", keywords);
+        graphQueryWrapper.or();
+        graphQueryWrapper.like("description", keywords);
+
+        List<Graph> graphList = this.list(graphQueryWrapper);
+        List<User> userList = userClient.list();
+        Map<Long, String> usernameMap = new HashMap<>();
+        for (User user: userList) {
+            usernameMap.put(user.getId(), user.getUsername());
+        }
+        List<GraphVo> list = new ArrayList<>();
+        for (Graph graph: graphList) {
+            list.add(new GraphVo(graph, usernameMap.get(graph.getUserId())));
+        }
+        return BaseResult.getSuccessResult(list);
+    }
+
+    @Override
     public List<Graph> getGraphListByUserId(UserGraphRequest userGraphRequest) {
         QueryWrapper<Graph> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userGraphRequest.getId());

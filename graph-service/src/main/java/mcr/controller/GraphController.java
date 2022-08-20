@@ -11,6 +11,7 @@ import mcr.entity.vo.GraphVo;
 import mcr.service.GraphService;
 import mcr.service.NodeService;
 import mcr.service.RelationService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,14 @@ public class GraphController {
         return BaseResult.getSuccessResult(graphData);
     }
 
-    @PostMapping("/popularGraphList")
-    BaseResult popularGraphList() {
-        return graphService.popularGraphList();
+    @PostMapping("/graphList")
+    BaseResult popularGraphList(@RequestBody UserGraphRequest userGraphRequest) {
+        if (StringUtils.isBlank(userGraphRequest.getSearchText())) {
+            return graphService.popularGraphList();
+        }
+
+        return graphService.searchGraphList(userGraphRequest.getSearchText());
+
     }
 
     @PostMapping("/getGraphListByUserId")
