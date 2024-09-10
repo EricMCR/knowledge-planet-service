@@ -51,7 +51,7 @@ public class GraphServiceImpl extends ServiceImpl<GraphMapper, Graph>
         }
 
         Map<String, Object> map = (HashMap)result.getData();
-        graph.setUserId((Long)map.get("id"));
+        graph.setUserId(Long.parseLong(map.get("id").toString()));
 
         if (this.save(graph)) {
             return BaseResult.getSuccessResult(graph);
